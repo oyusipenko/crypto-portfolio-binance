@@ -7,10 +7,15 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "ag-grid-community": "^25.3.0",
+    "ag-grid-react": "^25.3.0",
+    "formik": "^2.2.9",
+    "node-sass": "^6.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.3",
-    "react-scripts": "4.0.3"
+    "react-scripts": "4.0.3",
+    "sass-loader": "^12.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

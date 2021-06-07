@@ -1,56 +1,81 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import "./App.scss";
+import MainTable from "./features/MainTable/MainTable";
+import { addCoin } from "./features/MainTable/MainTableSlice";
+import { Formik } from "formik";
 
 function App() {
+  const dispatch = useDispatch();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <div className="header"></div>
+      <div className="main">
+        <Formik
+          initialValues={{ coinName: "", quantity: "", startPrice: "" }}
+          // validate={(values) => {
+          //   const errors = {};
+          //   if (!values.email) {
+          //     errors.email = "Required";
+          //   } else if (
+          //     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          //   ) {
+          //     errors.email = "Invalid email address";
+          //   }
+          //   return errors;
+          // }}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2));
+              setSubmitting(false);
+            }, 400);
+            dispatch(addCoin(values));
+          }}
+        >
+          {({
+            // values,
+            // errors,
+            // touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="coinName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                // value={values.coinName}
+              />
+              {/* {errors.email && touched.email && errors.email} */}
+              <input
+                type="text"
+                name="quantity"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                // value={values.quantity}
+              />
+              {/* {errors.password && touched.password && errors.password} */}
+              <input
+                type="text"
+                name="startPrice"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                // value={values.startPrice}
+              />
+              {/* {errors.password && touched.password && errors.password} */}
+              <button type="submit" disabled={isSubmitting}>
+                Submit
+              </button>
+            </form>
+          )}
+        </Formik>
+        <MainTable />
+      </div>
     </div>
   );
 }
