@@ -1,80 +1,35 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Container } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import "./App.scss";
+import NavBar from "./components/NavBar/NavBar";
+import AddCoin from "./components/AddCoin/AddCoin";
+import AvarageCoinCost from "./components/AvarageCoinCost/AvarageCoinCost";
+import PortfolioStatus from "./components/PortfolioStatus/PortfolioStatus";
 import MainTable from "./features/MainTable/MainTable";
-import { addCoin } from "./features/MainTable/MainTableSlice";
-import { Formik } from "formik";
 
 function App() {
-  const dispatch = useDispatch();
-
   return (
     <div className="App">
-      <div className="header"></div>
+      <NavBar />
+
       <div className="main">
-        <Formik
-          initialValues={{ coinName: "", quantity: "", startPrice: "" }}
-          // validate={(values) => {
-          //   const errors = {};
-          //   if (!values.email) {
-          //     errors.email = "Required";
-          //   } else if (
-          //     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          //   ) {
-          //     errors.email = "Invalid email address";
-          //   }
-          //   return errors;
-          // }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
-            dispatch(addCoin(values));
-          }}
-        >
-          {({
-            // values,
-            // errors,
-            // touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            /* and other goodies */
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="coinName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                // value={values.coinName}
-              />
-              {/* {errors.email && touched.email && errors.email} */}
-              <input
-                type="text"
-                name="quantity"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                // value={values.quantity}
-              />
-              {/* {errors.password && touched.password && errors.password} */}
-              <input
-                type="text"
-                name="startPrice"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                // value={values.startPrice}
-              />
-              {/* {errors.password && touched.password && errors.password} */}
-              <button type="submit" disabled={isSubmitting}>
-                Submit
-              </button>
-            </form>
-          )}
-        </Formik>
-        <MainTable />
+        <Container>
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={3}>
+              <AddCoin />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <AvarageCoinCost />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <PortfolioStatus />
+            </Grid>
+          </Grid>
+
+          <MainTable />
+        </Container>
       </div>
     </div>
   );

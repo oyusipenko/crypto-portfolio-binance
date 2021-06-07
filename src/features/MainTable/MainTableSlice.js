@@ -15,7 +15,6 @@ function loadFromLocalStorage() {
 const initUsersCoins = () => {
   const data = loadFromLocalStorage();
   if (!data) {
-    console.log("nodata");
     return [
       {
         coinName: "BTC",
@@ -133,10 +132,6 @@ const initUsersCoins = () => {
   }
 };
 
-// const initTableOptions = () => {
-// console.log("initTableOptions", initialState);
-// };
-
 export const getCoinsPrice = createAsyncThunk(
   "mainTable/getCoinPrice",
   async (coins) => {
@@ -156,8 +151,9 @@ export const getCoinsPrice = createAsyncThunk(
 
 const initialState = {
   userCoins: initUsersCoins(),
+  calculatedCoinsData: null,
+  portfolioStatus: null,
   status: "idle",
-  // tableOptions: initTableOptions(),
 };
 
 export const mainTableSlice = createSlice({
@@ -172,10 +168,63 @@ export const mainTableSlice = createSlice({
         quantity: +quantity.toFixed(2),
         startPrice: +startPrice.toFixed(2),
       };
-
       state.userCoins.push(newCoin);
-
       localStorage.setItem("userCoins", JSON.stringify(state.userCoins));
+    },
+    caclCoinsData: (state, action) => {
+      const { coins, coinsPrice } = action.payload;
+      if (coins && coinsPrice) {
+        let coinsData = [];
+        coins.forEach((coin, index) => {
+          const coinData = {
+            number: index,
+            coinName: coin.coinName,
+            quantity: coin.quantity.toFixed(4),
+            startPrice: +coin.startPrice,
+            startCost: (coin.quantity * coin.startPrice).toFixed(2),
+            currentPrice: coinsPrice[coin.coinName],
+            currentCost: (coin.quantity * coinsPrice[coin.coinName]).toFixed(2),
+            profitDollar: (
+              coin.quantity * coinsPrice[coin.coinName] -
+              coin.quantity * coin.startPrice
+            ).toFixed(2),
+            profitPercent: (
+              ((coin.quantity * coinsPrice[coin.coinName] -
+                coin.quantity * coin.startPrice) /
+                (coin.quantity * coin.startPrice)) *
+              100
+            ).toFixed(0),
+          };
+          coinsData.push(coinData);
+        });
+        state.calculatedCoinsData = [...coinsData];
+      }
+    },
+    caclPortfolioStatus: (state, action) => {
+      const calculatedCoinsData = action.payload;
+      if (calculatedCoinsData) {
+        let portfolioStatus = {
+          startCost: 0,
+          currentCost: 0,
+          profitDollar: 0,
+          profitPercent: 0,
+        };
+        calculatedCoinsData.forEach(
+          ({ startCost, currentCost, profitDollar }) => {
+            portfolioStatus.startCost = +portfolioStatus.startCost + +startCost;
+            portfolioStatus.currentCost =
+              +portfolioStatus.currentCost + +currentCost;
+            portfolioStatus.profitDollar =
+              +portfolioStatus.profitDollar + +profitDollar;
+          }
+        );
+        portfolioStatus = {
+          ...portfolioStatus,
+          profitPercent:
+            portfolioStatus.profitDollar / portfolioStatus.startCost,
+        };
+        state.portfolioStatus = { ...portfolioStatus };
+      }
     },
   },
   extraReducers: {
@@ -184,17 +233,13 @@ export const mainTableSlice = createSlice({
     },
     [getCoinsPrice.fulfilled]: (state, action) => {
       state.status = "idle";
-      console.log("getCoinPrice.fulfilled", action);
       state.coinsPrice = action.payload;
     },
   },
 });
 
-export const { addCoin } = mainTableSlice.actions;
-
-// export const selectData = (state) => {
-// return state.mainTable.coinsPrice;
-// };
+export const { addCoin, caclCoinsData, caclPortfolioStatus } =
+  mainTableSlice.actions;
 
 export const useCoins = (state) => {
   return state.mainTable.userCoins;
@@ -204,8 +249,12 @@ export const useCoinsPrice = (state) => {
   return state.mainTable.coinsPrice;
 };
 
-// export const getTableOptions = async (state) => {
-//   return state.mainTable.tableOptions;
-// };
+export const useCalculatedCoinsData = (state) => {
+  return state.mainTable.calculatedCoinsData;
+};
+
+export const usePortfolioStatus = (state) => {
+  return state.mainTable.portfolioStatus;
+};
 
 export default mainTableSlice.reducer;
