@@ -7,10 +7,11 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    marginBottom: "10px",
+    marginBottom: "20px",
+    paddingBottom: "10px",
   },
   toolBar: {
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
 }));
 
@@ -20,11 +21,10 @@ export default function NavBar() {
   return (
     <AppBar position="relative" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
-        <MenuIcon />
-        <div style={{ textAlign: "right" }}>
+        {/* <MenuIcon /> */}
+        <div style={{ textAlign: "center" }}>
           <Typography variant="h3"> Crypto Portfolio</Typography>
           <Typography variant="h6">
-            {" "}
             Keep track of your coins. Add coins, average the cost.
             <br /> Works for the currency pair "the name of your coin" / BUSD.
             Prices are pulled from the Binance exchange.
