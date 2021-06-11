@@ -91,14 +91,6 @@ export default function MainTable() {
       field: "coinName",
     },
     {
-      headerName: "Quantity",
-      field: "quantity",
-    },
-    {
-      headerName: "Current Price",
-      field: "currentPrice",
-    },
-    {
       headerName: "Current Cost",
       field: "currentCost",
     },
