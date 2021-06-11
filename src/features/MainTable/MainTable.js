@@ -7,74 +7,149 @@ import {
   useCalculatedCoinsData,
   caclCoinsData,
 } from "./MainTableSlice";
-import "./MainTable.scss";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useMediaQuery, useTheme } from "@material-ui/core";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    "& > *": {
+      borderRadius: "5px",
+    },
+    "& .ag-root-wrapper-body": {
+      height: "100%",
+    },
+    "& .ag-header-cell-label": {
+      justifyContent: "center",
+    },
+    "& .ag-center-cols-viewport": {
+      overflowX: "hidden !important",
+    },
+  },
+}));
 
 export default function MainTable() {
   const dispatch = useDispatch();
-  const [gridApi, setGridApi] = useState(null);
-  const [gridColumnApi, setGridColumnApi] = useState(null);
-  const [rowData, setRowData] = useState([]);
-  const [columnDefs, setColumnDefs] = useState([
-    {
-      headerName: "Number",
-      field: "number",
-    },
-    {
-      headerName: "coinName",
-      field: "coinName",
-    },
-    {
-      headerName: "quantity",
-      field: "quantity",
-    },
-    {
-      headerName: "startCost",
-      field: "startCost",
-    },
-    {
-      headerName: "startPrice",
-      field: "startPrice",
-    },
-    {
-      headerName: "currentPrice",
-      field: "currentPrice",
-    },
-    {
-      headerName: "currentCost",
-      field: "currentCost",
-    },
-    {
-      headerName: "profitDollar",
-      field: "profitDollar",
-    },
-    {
-      headerName: "profitPercent",
-      field: "profitPercent",
-    },
-  ]);
-
+  const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const coins = useSelector(useCoins);
   const coinsPrice = useSelector(useCoinsPrice);
   const calculatedCoinsData = useSelector(useCalculatedCoinsData);
 
+  const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
+  const [rowData, setRowData] = useState([]);
+
+  const columnDefsDesktop = [
+    {
+      headerName: "№",
+      field: "number",
+      width: 50,
+    },
+    {
+      headerName: "Coin Name",
+      field: "coinName",
+    },
+    {
+      headerName: "Quantity",
+      field: "quantity",
+    },
+    {
+      headerName: "Start Cost",
+      field: "startCost",
+    },
+    {
+      headerName: "Start/Avarage Price",
+      field: "startPrice",
+    },
+    {
+      headerName: "Current Price",
+      field: "currentPrice",
+    },
+    {
+      headerName: "Current Cost",
+      field: "currentCost",
+    },
+    {
+      headerName: "Profit $",
+      field: "profitDollar",
+    },
+    {
+      headerName: "Profit %",
+      field: "profitPercent",
+    },
+  ];
+  const columnDefsMobile = [
+    {
+      headerName: "Coin Name",
+      field: "coinName",
+    },
+    {
+      headerName: "Quantity",
+      field: "quantity",
+    },
+    {
+      headerName: "Current Price",
+      field: "currentPrice",
+    },
+    {
+      headerName: "Current Cost",
+      field: "currentCost",
+    },
+    {
+      headerName: "Profit $",
+      field: "profitDollar",
+    },
+    {
+      headerName: "Profit %",
+      field: "profitPercent",
+    },
+  ];
+  const [columnDefs, setColumnDefs] = useState(columnDefsMobile);
   useEffect(() => {
-    setInterval(() => {
-      dispatch(getCoinsPrice(coins));
-    }, 1000);
-  }, []);
+    if (isMobile) {
+      setColumnDefs(columnDefsMobile);
+    } else {
+      setColumnDefs(columnDefsDesktop);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
+    if (gridApi) {
+      gridApi.refreshCells();
+    }
+  }, [columnDefs]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch(getCoinsPrice(coins));
+    }, 3500);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [coins]);
+
+  useEffect(() => {
+    setIsLoading(true);
     if (coins && coinsPrice) {
-      dispatch(caclCoinsData({ coins, coinsPrice }));
+      if (coins.length === Object.keys(coinsPrice).length) {
+        dispatch(caclCoinsData({ coins, coinsPrice }));
+        setIsLoading(false);
+      }
     }
   }, [coins, coinsPrice]);
 
   useEffect(() => {
     if (calculatedCoinsData) {
-      console.log("rowData", calculatedCoinsData);
       setRowData(calculatedCoinsData);
     }
   }, [calculatedCoinsData]);
@@ -90,19 +165,32 @@ export default function MainTable() {
     }
   });
 
-  const gridOptions = {};
+  useEffect(() => {
+    if (rowData && rowData.length > 0) {
+      setIsLoading(false);
+    }
+  }, [rowData]);
 
   return (
-    <div
-      className="ag-theme-alpine"
-      style={{ height: "1000px", width: "100%", marginTop: "15px" }}
-    >
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={columnDefs}
-        onGridReady={onGridReady}
-        gridOptions={gridOptions}
-      />
-    </div>
+    <Card>
+      <CardContent style={{ textAlign: "center" }}>
+        {coins.length > 0 ? (
+          isLoading ? (
+            <CircularProgress style={{ margin: "20px 0" }} />
+          ) : (
+            <div className="ag-theme-balham" style={{ width: "100%" }}>
+              <AgGridReact
+                rowData={rowData}
+                columnDefs={columnDefs}
+                onGridReady={onGridReady}
+                className={classes.root}
+              />
+            </div>
+          )
+        ) : (
+          <h1>Please add some coins to start using your wallet</h1>
+        )}
+      </CardContent>
+    </Card>
   );
 }

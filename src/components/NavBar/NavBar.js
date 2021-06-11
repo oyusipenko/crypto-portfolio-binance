@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, useMediaQuery, useTheme } from "@material-ui/core";
+import { AppBar, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
@@ -16,8 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NavBar() {
   const classes = useStyles();
-  const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <AppBar position="relative" className={classes.appBar}>

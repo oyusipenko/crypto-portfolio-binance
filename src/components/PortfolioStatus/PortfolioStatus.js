@@ -4,6 +4,8 @@ import {
   usePortfolioStatus,
   caclPortfolioStatus,
   useCalculatedCoinsData,
+  useCoins,
+  useCoinsPrice,
 } from "../../features/MainTable/MainTableSlice";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -22,41 +24,49 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   card: {
-    height: "280px",
+    minHeight: "327px",
   },
   cardContent: {
     textAlign: "center",
     height: "100%",
   },
-  submitButton: {
-    marginTop: "20px",
+  portfolioRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "20px",
   },
-  form: { display: "flex", flexDirection: "column" },
-  dropdown: {
-    marginTop: "16px",
-  },
-  portfolio: {
+  spinnerBox: {
+    height: "202px",
     display: "flex",
     justifyContent: "center",
-    // height: "100%",
+    alignItems: "center",
   },
 }));
 
 export default function AvarageCoinCost() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const coins = useSelector(useCoins);
+  const coinsPrice = useSelector(useCoinsPrice);
   const calculatedCoinsData = useSelector(useCalculatedCoinsData);
   const portfolioStatus = useSelector(usePortfolioStatus);
   const [portfolioData, setPortfolioData] = useState(null);
 
   useEffect(() => {
-    dispatch(caclPortfolioStatus(calculatedCoinsData));
+    dispatch(caclPortfolioStatus({ coins, coinsPrice }));
   }, [calculatedCoinsData]);
 
   useEffect(() => {
     if (portfolioStatus) {
-      console.log(portfolioStatus);
       setPortfolioData(portfolioStatus);
+    }
+  }, [portfolioStatus]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (portfolioStatus && portfolioStatus.startCost > 0) {
+      setIsLoading(false);
     }
   }, [portfolioStatus]);
 
@@ -68,20 +78,69 @@ export default function AvarageCoinCost() {
             Portfolio Status
           </Typography>
         </Box>
-        <Box className={classes.portfolio}>
-          {!portfolioData ? (
-            <CircularProgress />
+        <Box
+          className={
+            !portfolioData || !coins.length > 0 ? classes.spinnerBox : null
+          }
+        >
+          {coins.length > 0 ? (
+            isLoading > 0 ? (
+              <CircularProgress />
+            ) : (
+              <Typography component="div">
+                <Box className={classes.portfolioRow}>
+                  <Typography variant="body1" color="textSecondary">
+                    Total Amount Start:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    fontWeight="fontWeightBold"
+                  >
+                    {portfolioData.startCost.toFixed(2)}$
+                  </Typography>
+                </Box>
+                <Box className={classes.portfolioRow}>
+                  <Typography variant="body1" color="textSecondary">
+                    Total Amount Current:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    fontWeight="fontWeightBold"
+                  >
+                    {portfolioData.currentCost.toFixed(2)}$
+                  </Typography>
+                </Box>
+                <Box className={classes.portfolioRow}>
+                  <Typography variant="body1" color="textSecondary">
+                    Total profit $:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    fontWeight="fontWeightBold"
+                  >
+                    {portfolioData.profitDollar.toFixed(2)}$
+                  </Typography>
+                </Box>
+                <Box className={classes.portfolioRow}>
+                  <Typography variant="body1" color="textSecondary">
+                    Total profit %:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    fontWeight={800}
+                    m={1}
+                  >
+                    {(portfolioData.profitPercent * 100).toFixed(2)}%
+                  </Typography>
+                </Box>
+              </Typography>
+            )
           ) : (
-            <div>
-              <p>Total Amount Start: {portfolioData.startCost}$</p>
-              <p>
-                Total Amount Current: {portfolioData.currentCost.toFixed(2)}$
-              </p>
-              <p>Total profit $: {portfolioData.profitDollar.toFixed(2)}$</p>
-              <p>
-                Total profit %: {portfolioData.profitPercent.toFixed(2) * 100}%
-              </p>
-            </div>
+            <h3>Please add some coins to start using your wallet</h3>
           )}
         </Box>
       </CardContent>
