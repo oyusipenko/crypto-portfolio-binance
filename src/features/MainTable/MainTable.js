@@ -51,38 +51,47 @@ export default function MainTable() {
       headerName: "№",
       field: "number",
       width: 50,
+      sortable: true,
     },
     {
       headerName: "Coin Name",
       field: "coinName",
+      sortable: true,
     },
     {
       headerName: "Quantity",
       field: "quantity",
+      sortable: true,
     },
     {
       headerName: "Start Cost",
       field: "startCost",
+      sortable: true,
     },
     {
       headerName: "Start/Avarage Price",
       field: "startPrice",
+      sortable: true,
     },
     {
       headerName: "Current Price",
       field: "currentPrice",
+      sortable: true,
     },
     {
       headerName: "Current Cost",
       field: "currentCost",
+      sortable: true,
     },
     {
       headerName: "Profit $",
       field: "profitDollar",
+      sortable: true,
     },
     {
       headerName: "Profit %",
       field: "profitPercent",
+      sortable: true,
     },
   ];
   const columnDefsMobile = [
