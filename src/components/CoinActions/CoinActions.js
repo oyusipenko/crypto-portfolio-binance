@@ -91,14 +91,16 @@ export default function AvarageCoinCost() {
               errors.coinName = "Required";
             }
             if (
-              selectedAction === "buyCoins" ||
+              (selectedAction === "buyCoins" && !values.quantity) ||
               (selectedAction === "sellCoins" && !values.quantity)
             ) {
+              console.log("123");
               errors.quantity = "Required";
             } else if (
-              selectedAction === "buyCoins" ||
+              (selectedAction === "buyCoins" &&
+                !/(^[0-9.]+$)/g.test(values.quantity)) ||
               (selectedAction === "sellCoins" &&
-                !/(^[0-9\.]+$)/g.test(values.quantity))
+                !/(^[0-9.]+$)/g.test(values.quantity))
             ) {
               errors.quantity = "Allows only digits";
             }
@@ -106,7 +108,7 @@ export default function AvarageCoinCost() {
               errors.startPrice = "Required";
             } else if (
               selectedAction === "buyCoins" &&
-              !/(^[0-9\.]+$)/g.test(values.startPrice)
+              !/(^[0-9.]+$)/g.test(values.startPrice)
             ) {
               errors.startPrice = "Allows only digits";
             }

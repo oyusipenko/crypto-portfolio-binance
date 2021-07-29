@@ -78,12 +78,12 @@ export default function AddCoin() {
             }
             if (!values.quantity) {
               errors.quantity = "Required";
-            } else if (!/(^[0-9\.]+$)/g.test(values.quantity)) {
+            } else if (!/(^[0-9.]+$)/g.test(values.quantity)) {
               errors.quantity = "Allows only digits";
             }
             if (!values.startPrice) {
               errors.startPrice = "Required";
-            } else if (!/(^[0-9\.]+$)/g.test(values.startPrice)) {
+            } else if (!/(^[0-9.]+$)/g.test(values.startPrice)) {
               errors.startPrice = "Allows only digits";
             }
             return errors;
@@ -111,7 +111,10 @@ export default function AddCoin() {
                 <TextField
                   type="text"
                   name="coinName"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.toUpperCase();
+                    handleChange(e);
+                  }}
                   onBlur={handleBlur}
                   label="Coin name"
                   value={values.coinName}

@@ -43,7 +43,7 @@ export default function MainTable() {
   const calculatedCoinsData = useSelector(useCalculatedCoinsData);
 
   const [gridApi, setGridApi] = useState(null);
-  const [gridColumnApi, setGridColumnApi] = useState(null);
+  // const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
 
   const columnDefsDesktop = [
@@ -157,7 +157,7 @@ export default function MainTable() {
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    setGridColumnApi(params.columnApi);
+    // setGridColumnApi(params.columnApi);
   };
 
   useEffect(() => {
