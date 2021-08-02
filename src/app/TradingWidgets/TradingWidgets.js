@@ -3,11 +3,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TradingViewWidget from "react-tradingview-widget";
 import { useSelector } from "react-redux";
-import { useCoins } from "../../features/wallet/walletSlice";
+import { useCoins, useCoinsPrice } from "../../features/wallet/walletSlice";
 
 export default function TradingWidgets() {
   const coins = useSelector(useCoins);
-
+  const coinsPrice = useSelector(useCoinsPrice);
+  console.log(coinsPrice);
   const widgets = coins.map((coin) => {
     return (
       <Card style={{ marginBottom: "20px" }}>
@@ -20,5 +21,5 @@ export default function TradingWidgets() {
       </Card>
     );
   });
-  return widgets;
+  return coinsPrice ? widgets : null;
 }
