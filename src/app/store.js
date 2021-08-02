@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import mainTableReducer from "../features/MainTable/MainTableSlice";
+import rootReducer from "./rootReducer";
 
 export const store = configureStore({
   reducer: {
-    mainTable: mainTableReducer,
+    reducer: rootReducer,
   },
 });

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPrice } from "./MainTableAPI";
-import demoData from "../../demoData.json";
+import { fetchCoinsPrice } from "./walletAPI";
+import demoData from "../../app/demoData/demoData.json";
+import { RestoreOutlined } from "@material-ui/icons";
 
 function loadFromLocalStorage() {
   try {
@@ -23,19 +24,17 @@ const initUsersCoins = () => {
 };
 
 export const getCoinsPrice = createAsyncThunk(
-  "mainTable/getCoinPrice",
+  "wallet/getCoinPrice",
   async (coins) => {
-    let responses = {};
-    for (const coin of coins) {
-      const response = await fetchPrice(coin.coinName);
-      response.symbol = response.symbol.substring(
-        0,
-        response.symbol.indexOf("BUSD")
-      );
-      const price = +response.price;
-      responses[response.symbol] = price.toFixed(2);
-    }
-    return responses;
+    const coinsPrice = await fetchCoinsPrice(coins);
+
+    let coinsData = {};
+    coinsPrice.forEach((coin) => {
+      const symbol = coin.symbol.substring(0, coin.symbol.indexOf("BUSD"));
+      coinsData[symbol] = +coin.price;
+    });
+    getCoinsPrice(coins);
+    return coinsData;
   }
 );
 
@@ -46,8 +45,8 @@ const initialState = {
   status: "idle",
 };
 
-export const mainTableSlice = createSlice({
-  name: "mainTable",
+export const walletSlice = createSlice({
+  name: "wallet",
   initialState,
   reducers: {
     addCoin: (state, action) => {
@@ -237,22 +236,22 @@ export const {
   uploadData,
   loadDemoData,
   clearAllData,
-} = mainTableSlice.actions;
+} = walletSlice.actions;
 
 export const useCoins = (state) => {
-  return state.mainTable.userCoins;
+  return state.reducer.wallet.userCoins;
 };
 
 export const useCoinsPrice = (state) => {
-  return state.mainTable.coinsPrice;
+  return state.reducer.wallet.coinsPrice;
 };
 
 export const useCalculatedCoinsData = (state) => {
-  return state.mainTable.calculatedCoinsData;
+  return state.reducer.wallet.calculatedCoinsData;
 };
 
 export const usePortfolioStatus = (state) => {
-  return state.mainTable.portfolioStatus;
+  return state.reducer.wallet.portfolioStatus;
 };
 
-export default mainTableSlice.reducer;
+export default walletSlice.reducer;

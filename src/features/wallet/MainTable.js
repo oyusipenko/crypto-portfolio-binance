@@ -6,7 +6,7 @@ import {
   useCoinsPrice,
   useCalculatedCoinsData,
   caclCoinsData,
-} from "./MainTableSlice";
+} from "./walletSlice";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
@@ -132,7 +132,7 @@ export default function MainTable() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       dispatch(getCoinsPrice(coins));
-    }, 3500);
+    }, 10000);
 
     return () => {
       clearInterval(intervalId);

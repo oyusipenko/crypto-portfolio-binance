@@ -3,7 +3,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TradingViewWidget from "react-tradingview-widget";
 import { useSelector } from "react-redux";
-import { useCoins } from "../../features/MainTable/MainTableSlice";
+import { useCoins } from "../../features/wallet/walletSlice";
 
 export default function TradingWidgets() {
   const coins = useSelector(useCoins);

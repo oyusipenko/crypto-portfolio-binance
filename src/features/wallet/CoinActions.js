@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useCoins,
-  averageCoinCost,
-  sellCoins,
-  delCoin,
-} from "../../features/MainTable/MainTableSlice";
+import { useCoins, averageCoinCost, sellCoins, delCoin } from "./walletSlice";
 import { Formik } from "formik";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";

@@ -1,13 +1,13 @@
 import React from "react";
 import { Container } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import NavBar from "./components/NavBar/NavBar";
-import AddCoin from "./components/AddCoin/AddCoin";
-import CoinActions from "./components/CoinActions/CoinActions";
-import PortfolioStatus from "./components/PortfolioStatus/PortfolioStatus";
-import Settings from "./components/Settings/Settings";
-import TradingWidgets from "./components/TradingWidgets/TradingWidgets";
-import MainTable from "./features/MainTable/MainTable";
+import NavBar from "./NavBar/NavBar";
+import AddCoin from "../features/wallet/AddCoin";
+import CoinActions from "../features/wallet/CoinActions";
+import PortfolioStatus from "../features/wallet/PortfolioStatus";
+import Settings from "../features/wallet/Settings";
+import TradingWidgets from "./TradingWidgets/TradingWidgets";
+import MainTable from "../features/wallet/MainTable";
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addCoin, useCoins } from "../../features/MainTable/MainTableSlice";
-import { fetchPrice } from "../../features/MainTable/MainTableAPI";
+import { addCoin, useCoins } from "./walletSlice";
+import { checkCoin } from "./walletAPI";
 import { Formik } from "formik";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -49,10 +49,10 @@ export default function AddCoin() {
   const dispatch = useDispatch();
   const coins = useSelector(useCoins);
 
-  const checkCoin = async (coinName) => {
-    const response = await fetchPrice(coinName);
-    return !response;
-  };
+  // const checkCoin = async (coinName) => {
+  //   const response = await checkCoin(coinName);
+  //   return !response;
+  // };
 
   const classes = useStyles();
   return (
