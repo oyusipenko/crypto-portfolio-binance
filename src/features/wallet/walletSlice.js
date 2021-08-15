@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchCoinsPrice } from "./walletAPI";
+import { fetchCoinsPrice, testHistoryOrders } from "./walletAPI";
 import demoData from "../../app/demoData/demoData.json";
 import { RestoreOutlined } from "@material-ui/icons";
 
@@ -26,6 +26,7 @@ const initUsersCoins = () => {
 export const getCoinsPrice = createAsyncThunk(
   "wallet/getCoinPrice",
   async (coins) => {
+    await testHistoryOrders();
     const coinsPrice = await fetchCoinsPrice(coins);
 
     let coinsData = {};

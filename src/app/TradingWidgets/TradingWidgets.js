@@ -8,7 +8,6 @@ import { useCoins, useCoinsPrice } from "../../features/wallet/walletSlice";
 export default function TradingWidgets() {
   const coins = useSelector(useCoins);
   const coinsPrice = useSelector(useCoinsPrice);
-  console.log(coinsPrice);
   const widgets = coins.map((coin) => {
     return (
       <Card style={{ marginBottom: "20px" }}>
