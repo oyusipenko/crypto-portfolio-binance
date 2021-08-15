@@ -23,8 +23,8 @@ export function fetchCoinsPrice(coins) {
 export async function checkCoin(coinName) {
   const response = await getCoinPrice(coinName);
   console.log(response);
-  console.log(!!response);
-  return !!response;
+  console.log(!response);
+  return !response;
 }
 
 export function testHistoryOrders() {
